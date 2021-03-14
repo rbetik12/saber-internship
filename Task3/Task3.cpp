@@ -27,6 +27,15 @@ void CheckIndexMap(std::unordered_map<int, Vec3>& map, int vertexIndex, int face
     }
 }
 
+/*
+* Here we calculate average per-vertex normals.
+* First of all we calculate normal for each triangle.
+* 
+* Because we need to take average normal per each vertex (I decided to take weighted sum of each face normal that is adjacent for the vertex), we need to calculate normal weight for vertex normal.
+* The weight of the normal for vertex is calculated as sin(angle), where angle is the angle between edges of the face that are adjacent to the vertex. Then we add weighted normal to vertex index. 
+* 
+* After all calculations done we iterate through the vertex index map and normalize vertices normal.
+*/
 void CalcMeshNormals(Vec3* normals, const Vec3* verts, const int* faces, int nverts, int nfaces) {
     IVec3* facesVec = (IVec3*)faces;
     std::unordered_map<int, Vec3> vertexIndexToWeigthedNormal;
@@ -42,15 +51,9 @@ void CalcMeshNormals(Vec3* normals, const Vec3* verts, const int* faces, int nve
         Vec3 p2 = verts[facesVec[faceIndex].y];
         Vec3 p3 = verts[facesVec[faceIndex].z];
 
-        float angle1 = (p2 - p1).Angle(p3 - p1);
-        float angle2 = (p1 - p3).Angle(p2 - p3);
-        float angle3 = (p1 - p2).Angle(p3 - p2);
-
-        /*std::cout << (p2 - p1) << std::endl;
-        std::cout << (p3 - p1) << std::endl;*/
-        /*std::cout << angle1 << std::endl;
-        std::cout << angle2 << std::endl;
-        std::cout << angle3 << std::endl;*/
+        float angle1 = sin((p2 - p1).Angle(p3 - p1));
+        float angle2 = sin((p1 - p3).Angle(p2 - p3));
+        float angle3 = sin((p1 - p2).Angle(p3 - p2));
 
         Vec3 normal1 = normal * angle1;
         Vec3 normal2 = normal * angle2;

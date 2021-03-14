@@ -2,6 +2,8 @@
 #include <intrin.h>
 #include <cstring>
 #include <cmath>
+#include <chrono>
+#include <iostream>
 
 Vec3 CalcFaceNormal(IVec3& vertexIndexes, const Vec3* vertices) {
     // Load vertices in xmm regs
@@ -41,16 +43,23 @@ float Vec3::Magnitude() {
 }
 
 float Vec3::Angle(Vec3& vec) {
-    return (
+    return acosf(
         (x * vec.x + y * vec.y + z * vec.z) /
         (this->Magnitude() * vec.Magnitude())
     );
 }
 
 void Vec3::Normalize() {
-    x /= Magnitude();
-    y /= Magnitude();
-    z /= Magnitude();
+    float magnitude = Magnitude();
+    __m128 thisVec = _mm_loadu_ps((float*)this);
+    __m128 constVec = _mm_load_ps1(&magnitude);
+    __m128 res = _mm_div_ps(thisVec, constVec);
+
+    float result[4];
+    _mm_storeu_ps(result, res);
+    x = result[0];
+    y = result[1];
+    z = result[2];
 }
 
 Vec3 Vec3::operator-(const Vec3& vec) {
