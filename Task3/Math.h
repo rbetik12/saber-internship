@@ -1,3 +1,5 @@
+#include <ostream>
+
 struct Vec3 {
     float x;
     float y;
@@ -10,21 +12,20 @@ struct Vec3 {
     float Angle(Vec3& vec);
     void Normalize();
 
-    Vec3 operator-(const Vec3& vec) {
-        return Vec3(x - vec.x, y - vec.y, z - vec.z);
-    }
+    Vec3 operator-(const Vec3& vec);
 
-    Vec3 operator+(const Vec3& vec) {
-        return Vec3(x + vec.x, y + vec.y, z + vec.z);
-    }
+    Vec3 operator+(const Vec3& vec);
 
-    Vec3 operator*(const float a) {
-        return Vec3(x * a, y * a, z * a);
-    }
+    Vec3 operator*(const float a);
 
     Vec3& operator+=(const Vec3& vec) {
         *this = *this + vec;
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream& output, const Vec3& vec) {
+        output << "X: " << vec.x << " Y: " << vec.y << " Z: " << vec.z;
+        return output;
     }
 };
 

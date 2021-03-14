@@ -46,6 +46,12 @@ void CalcMeshNormals(Vec3* normals, const Vec3* verts, const int* faces, int nve
         float angle2 = (p1 - p3).Angle(p2 - p3);
         float angle3 = (p1 - p2).Angle(p3 - p2);
 
+        /*std::cout << (p2 - p1) << std::endl;
+        std::cout << (p3 - p1) << std::endl;*/
+        /*std::cout << angle1 << std::endl;
+        std::cout << angle2 << std::endl;
+        std::cout << angle3 << std::endl;*/
+
         Vec3 normal1 = normal * angle1;
         Vec3 normal2 = normal * angle2;
         Vec3 normal3 = normal * angle3;

@@ -52,3 +52,35 @@ void Vec3::Normalize() {
     y /= Magnitude();
     z /= Magnitude();
 }
+
+Vec3 Vec3::operator-(const Vec3& vec) {
+    __m128 thisVec = _mm_loadu_ps((float*)this);
+    __m128 otherVec = _mm_loadu_ps((float*)&vec);
+
+    __m128 res = _mm_sub_ps(thisVec, otherVec);
+
+    float result[4];
+    _mm_storeu_ps(result, res);
+    return Vec3(result[0], result[1], result[2]);
+}
+
+Vec3 Vec3::operator+(const Vec3& vec) {
+    __m128 thisVec = _mm_loadu_ps((float*)this);
+    __m128 otherVec = _mm_loadu_ps((float*)&vec);
+
+    __m128 res = _mm_add_ps(thisVec, otherVec);
+
+    float result[4];
+    _mm_storeu_ps(result, res);
+    return Vec3(result[0], result[1], result[2]);
+}
+
+Vec3 Vec3::operator*(const float a) {
+    __m128 thisVec = _mm_loadu_ps((float*)this);
+    __m128 constVec = _mm_load_ps1(&a);
+
+    __m128 res = _mm_mul_ps(thisVec, constVec);
+    float result[4];
+    _mm_storeu_ps(result, res);
+    return Vec3(result[0], result[1], result[2]);
+}
